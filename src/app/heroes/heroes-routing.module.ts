@@ -22,7 +22,7 @@ const routes: Routes = [
         component: AgregarComponent
       },
       {
-        path: 'editar:/id',
+        path: 'editar/:id',
         component: AgregarComponent
       },
       {
