@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Heroe, Publisher } from '../../interfaces/heroe.interface';
-import { HeroesService } from '../../services/heroes.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+
+import { Heroe, Publisher } from '../../interfaces/heroe.interface';
+import { HeroesService } from '../../services/heroes.service';
+import { ConfirmarComponent } from '../../components/confirmar/confirmar.component';
 
 @Component({
   selector: 'app-agregar',
@@ -38,7 +42,9 @@ export class AgregarComponent implements OnInit {
 
   constructor( private heroeService: HeroesService,
                private ActivatedRoute: ActivatedRoute, 
-               private router: Router ) { }
+               private router: Router,
+               private snackBar: MatSnackBar,
+               private dialog: MatDialog ) { }
 
   ngOnInit(): void {
     
@@ -53,10 +59,10 @@ export class AgregarComponent implements OnInit {
       .subscribe( heroe => this.heroe = heroe )
 
   }
-
+ 
   guardar() {
     if ( this.heroe.superhero.trim().length === 0 ) {
-      return;
+      return; 
     } 
 
     if ( this.heroe.id ) 
@@ -68,8 +74,23 @@ export class AgregarComponent implements OnInit {
     this.heroeService.agregarHeroe(this.heroe)
       .subscribe( heroe => {
         this.router.navigate(['/heroes/editar', heroe.id])
-      })
-    
+      })    
   }
 
+  borrarHeroe() {
+    this.dialog.open( ConfirmarComponent,  {
+      width: '250px'
+    });
+
+    // this.heroeService.borrarHeroe( this.heroe.id! )
+    //   .subscribe( resp => {
+    //     this.router.navigate(['/heroes'])
+    //   } )
+  }
+
+  mostrarSnakBar( mensaje: string ): void {
+    this.snackBar.open ( mensaje, 'Entendido!', {
+      duration: 2500
+    })
+  }
 }
