@@ -1,12 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Heroe, Publisher } from '../../interfaces/heroe.interface';
 import { HeroesService } from '../../services/heroes.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-agregar',
   templateUrl: './agregar.component.html',
-  styles: [
-  ]
+  styles: [`
+    img {
+      width: 100%;
+      border-radius: 10px;
+    }
+  `]
 })
 export class AgregarComponent implements OnInit {
 
@@ -30,9 +36,22 @@ export class AgregarComponent implements OnInit {
     alt_img: '',
   }
 
-  constructor( private heroeService: HeroesService ) { }
+  constructor( private heroeService: HeroesService,
+               private ActivatedRoute: ActivatedRoute, 
+               private router: Router ) { }
 
   ngOnInit(): void {
+    
+    if ( !this.router.url.includes('editar') ) {
+      return;
+    }
+
+    this.ActivatedRoute.params
+      .pipe(
+        switchMap( ( {id} ) => this.heroeService.getHeroeId(id) )
+      )
+      .subscribe( heroe => this.heroe = heroe )
+
   }
 
   guardar() {
@@ -40,9 +59,15 @@ export class AgregarComponent implements OnInit {
       return;
     } 
 
+    if ( this.heroe.id ) 
+    {
+      this.heroeService.actualizarHeroe( this.heroe )
+        .subscribe( heroe => console.log( 'Actualizando',heroe ) )
+    }
+
     this.heroeService.agregarHeroe(this.heroe)
-      .subscribe( resp => {
-       console.log('Respuesta',resp) 
+      .subscribe( heroe => {
+        this.router.navigate(['/heroes/editar', heroe.id])
       })
     
   }
