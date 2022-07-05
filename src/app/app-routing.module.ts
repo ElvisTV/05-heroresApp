@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { ErrorPageComponent } from './shared/error-page/error-page.component';
+import { AuthGuard } from './auth/guards/auth.guard';
 // import '../app/heroes/pages/agregar'
 
 //clave del lazy load
@@ -11,7 +13,9 @@ const routes: Routes = [
   },
   {
     path: 'heroes',
-    loadChildren: () => import('./heroes/heroes.module').then(module => module.HeroesModule)
+    loadChildren: () => import('./heroes/heroes.module').then(module => module.HeroesModule),
+    canLoad: [ AuthGuard ],
+    canActivate: [ AuthGuard ]
   },
   
   {

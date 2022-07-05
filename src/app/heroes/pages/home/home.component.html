@@ -4,7 +4,7 @@
 
 
 <h1>elvis</h1>
-<mat-sidenav-container fullscreen>
+<mat-sidenav-container fullscreen> 
 
     <mat-sidenav #sidenav mode="push" >
 
@@ -20,7 +20,7 @@
         </mat-toolbar>
 
         <mat-nav-list>
-            <a  routerLink="./listados" 
+            <a  routerLink="./listado" 
                 mat-list-item
                 (click)='sidenav.toggle()'>
                 <mat-icon mat-list-icon >label</mat-icon>
@@ -53,7 +53,11 @@
         </button>
 
         <span class="spacer" ></span>
-        <button mat-button>
+
+        <span> {{auth.usuario}}</span>
+
+        <button mat-button
+                (click)="logout()" >
             Logout
         </button>
 
